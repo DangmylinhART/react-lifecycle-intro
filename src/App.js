@@ -14,19 +14,13 @@ export class App extends Component {
             [event.target.name]: event.target.value
         }, () => {
             // // check if the input is an email
-            // if (!event.target.email.includes('@')) {
-            //     this.setState({ isEmail: false})   
-            //     console.log('not an email')
-            // } 
-            // this.setState({ isEmail: true })
-            // console.log('is an email')
-            for (let i = 0; i < this.state.email.length; i++) {
-                if (this.state.email.includes('@')) {
-console.log('please enter valid email format')
-} else {
-    console.log('correct email format')
-
-                }
+        
+            const { email } = this.state;
+            let isEmail = email.includes('@')
+            if (isEmail) {
+                console.log('true')
+            } else {
+                console.log('false')
             }
         })
     }
