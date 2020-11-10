@@ -1,187 +1,79 @@
-import React, { Component } from 'react';
-import { v4 as uuidv4 } from "uuid";
-import TodoView from "./components/TodoView"
+import React, { Component } from 'react'
+import Todo from './components/todo/Todo'
 
-export default class App extends Component {
+export class App extends Component {
     state = {
-        todoList: [
-            {
-                id: uuidv4(),
-                todo: 'Walk The Dog',
-                editToggle: false,
-            },
-            {
-                id: uuidv4(),
-                todo: 'By Milk',
-                editToggle: false,
-            },
-            {
-                id: uuidv4(),
-                todo: 'Wash Dishes',
-                editToggle: false,
-            },
-
-        ],
-        todoValue: "",
-        editValue: "",
-        showErrorMessage: false,
-        showNoTodoMessage: false,
-    }
-
-    handleInputChange = (event) => {
-
-        // if (this.state.showErrorMessage.length === 0){
-        //     this.setState({
-        //         showErrorMessage: true,
-        //     })
-        // }
-
-        // console.log(event.target.name, event.target.value);
-        this.setState({
-            [event.target.name]: event.target.value,
-        })
-    }
-
-    handleSubmit = (event) => {
-        event.preventDefault();
-
-        if (this.state.todoValue.length === 0) {
-            this.setState({
-                showErrorMessage: true,
-            })
-        }
-
-        let newTodoObj = {
-            id: uuidv4(),
-            todo: this.state.todoValue
-        }
-
-        // Pak's solution
-        let newArray = [...this.state.todoList, newTodoObj]
-
-        this.setState({
-            todoList: newArray,
-            todoValue: "",
-        }, () => {
-            if (this.state.todoList.length > 0) {
-                this.setState({
-                    showNoTodoMessage: false
-                })
-            }
-        })
-
-        // // Miley's solution: not complete
-
-        // if (this.state.todoList === 0) {
-        //     this.showErrorMessage = true
-        //     this.setState({
-        //         showErrorMessage: true
-        //     })
-        // } else {
-        //     let newArray = [...this.state.todoList, newTodoObj]
-        //     this.setState({
-        //         todoList: newArray,
-        //         todoValue: "",
-        //         showErrorMessage: true,
-        //         showNoTodoMessage: false
-        //     })
-        // }
-
-    }
-
-    addFunc = () => { }
-
-    handleDeleteTodo = (targetId) => {
-        let copyArray = [...this.state.todoList]
-
-        let newArrayWithoutTargetId = copyArray.filter(({ id }) => id !== targetId)
-
-        this.setState({
-            todoList: newArrayWithoutTargetId
-        }, () => {
-            if (this.state.todoList.length === 0) {
-                this.setState({
-                    showNoTodoMessage: true
-                })
-            }
-        },
-        )
-
-        // Miley's solution:
-        // if (newArrayWithoutTargetId.length === 0) {
-        //     this.setState({
-        //         todoList: newArrayWithoutTargetId,
-        //         showNoTodoMessage: true,
-        //     })
-        // } else {
-        //     this.setState({
-        //         todoList: newArrayWithoutTargetId,
-        //         showNoTodoMessage: false,
-        //     })
-        // }
-    }
-
-    handleEditTodo = (targetId) => {
-        let copyArray = [...this.state.todoList]
-
-        let updatedTodoArray = copyArray.map((item) => {
-            if (item.id === targetId) {
-                item.editToggle = true
-            }
-            return item
-        })
-        console.log(updatedTodoArray)
-
-        this.setState({
-            todoList: updatedTodoArray
-        },
-        )
+        isAuth: false,
+        email: '',
+        password: '',
+        isEmail: true
     }
 
     handleOnChange = (event) => {
         this.setState({
-            [event.target.name]: event.target.value,
+            [event.target.name]: event.target.value
+        }, () => {
+            // // check if the input is an email
+            // if (!event.target.email.includes('@')) {
+            //     this.setState({ isEmail: false})   
+            //     console.log('not an email')
+            // } 
+            // this.setState({ isEmail: true })
+            // console.log('is an email')
+            for (let i = 0; i < this.state.email.length; i++) {
+                if (this.state.email.includes('@')) {
+console.log('please enter valid email format')
+} else {
+    console.log('correct email format')
+
+                }
+            }
         })
     }
 
+    handleOneSubmit = (event) => {
+        event.preventDefault()
+        console.log(this.state)
+
+    }
     render() {
-        const { todoList, showErrorMessage, showNoTodoMessage, editValue } = this.state;
-        return (
-            <div style={{ textAlign: "center" }}>
-                {showErrorMessage
-                    ? <div style={{ color: "red", marginTop: 20 }}>Please, Enter Something Todo</div>
-                    : null}
-                <input
-                    onChange={this.handleInputChange}
-                    style={{ marginTop: 30 }}
-                    type="text"
-                    name="todoValue"
-                    value={this.state.todoValue} />{""}
-                <button onClick={this.handleSubmit}>Add</button>
-
-                {showNoTodoMessage
-                    ? (<div style={{ marginTop: 20 }}>Please Add Something To Do</div>)
-                    : (<TodoView
-                        todoList={todoList}
-                        handleDeleteTodo={this.handleDeleteTodo}
-                        handleEditTodo={this.handleEditTodo}
-                        handleOnChange={this.handleOnChange}
-                        editValue={editValue}
-                    />)
+        const { isAuth } = this.state
+        let showTodoComponent = isAuth
+            ? <Todo />
+            : (
+                <> {this.state.isEmail
+                    ? <p></p>
+                    : <p>"Your email is not valid"</p>
                 }
+                    <form onSubmit={this.handleOneSubmit}>
+                        {" "}
+                        <input
+                            type="text"
+                            name="email"
+                            placeholder="enter email"
+                            onChange={this.handleOnChange}
+                            value={this.state.email}
+                        /><br />{" "}
 
+                        <input
+                            type="text"
+                            name="password"
+                            placeholder="enter password"
+                            onChange={this.handleOnChange}
+                            value={this.state.password}
+                        /><br />{" "}
+                        <button>Sign Up</button>
+                    </form>
+                </>
+            )
 
+        return (
+            <div style={{ textAlign: "center", marginTop: 20 }}>
+                {showTodoComponent}
             </div>
         )
     }
 }
 
-// const TodoView = ({ todoList }) => {
-//     return (
-//         <ul style ={{listStyle: "none"}}>
-//             {todoList.map(({ id, todo }) => {
-//                 return <li key={id}>{todo}</li>
-//             })}
-//         </ul>
-//     )
-// }
+export default App
+

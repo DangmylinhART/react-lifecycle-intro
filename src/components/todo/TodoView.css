@@ -11,3 +11,7 @@
   .delete-button {
     background-color: red;
   }
+ .disabled-button {
+   pointer-events: none;
+   background-color: grey;
+ }
